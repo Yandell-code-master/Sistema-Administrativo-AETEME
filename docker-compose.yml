@@ -27,8 +27,13 @@ services:
       - /app/API/API/obj
       - /app/API/API/bin
     environment:
-      # .NET toma esta cadena como conectividad desde el host de desarrollo.
-      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=aeteme_dev;Username=aeteme_admin;Password=${POSTGRES_PASSWORD}"
+      # .NET toma esta cadena como conectividad desde el contenedor de desarrollo.
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=aeteme_dev;Username=aeteme_admin;Password=${POSTGRES_PASSWORD:-aeteme_dev_password}"
+      Jwt__Key: "${JWT_KEY:-aeteme-clave-de-desarrollo-cambiar-en-produccion-1234567890}"
+      Jwt__Issuer: "${JWT_ISSUER:-AETEME}"
+      Jwt__Audience: "${JWT_AUDIENCE:-AETEME-Web}"
+      # Contraseña solo del SuperAdministrador semilla en Development.
+      SeedSuperAdmin__Password: "${SEED_SUPERADMIN_PASSWORD:-12345678}"
     depends_on:
       db:
         condition: service_healthy

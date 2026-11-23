@@ -1,6 +1,24 @@
-@API_HostAddress = http://localhost:5070
+@API.http
+@baseUrl = http://localhost:5070
 
-GET {{API_HostAddress}}/weatherforecast/
+### Weather (scaffold original)
+GET {{baseUrl}}/weatherforecast
 Accept: application/json
 
-###
+### Login (devuelve accessToken y guarda la cookie aeteme_refresh)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "correo": "superadmin@aeteme.local",
+  "contrasena": "12345678"
+}
+
+### Renovar sesión (usa la cookie aeteme_refresh y la rota)
+POST {{baseUrl}}/api/auth/renovar
+Cookie: aeteme_refresh={{refreshToken}}
+
+### Cerrar sesión (requiere el accessToken del login/renovar)
+POST {{baseUrl}}/api/auth/cerrar
+Authorization: Bearer {{accessToken}}
+Cookie: aeteme_refresh={{refreshToken}}
